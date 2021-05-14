@@ -8,18 +8,32 @@ var citySearch = "london"
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
 var url = `${domain+endpoint}?q=${citySearch}&appid=${educationalKey}`
 
+
+let successFunc = (response) => {
+  var data = response;
+  var lat = data.coord.lat;
+  var long = data.coord.lon;
+  var icon = data.weather[0].icon;
+  $("#result").html("Lat: " + lat + " Long: " + long)
+  $("#result").append("</br>OpenWeather Data: " + JSON.stringify(response));
+  $("#result").append(`</br> <img src=\"http://openweathermap.org/img/wn/${icon}@2x.png\">`)
+}
+
 //https://api.jquery.com/jquery.ajax/
-  $.ajax({
-      method: "GET",
-      url: url
-    })
-    .done(function (response) {
-      var data = response;
-      var lat = data.coord.lat;
-      var long = data.coord.lon;
-      var icon = data.weather[0].icon;
-      $("#result").html("Lat: " + lat + " Long: " + long)
-      $("#result").append("</br>OpenWeather Data: " + JSON.stringify(response));
-      $("#result").append(`</br> <img src=\"http://openweathermap.org/img/wn/${icon}@2x.png\">`)
-    });
+/*   $.get({
+    url: url,
+    data: {
+      q: citySearch,
+      appid: educationalKey
+    },
+    success: successFunc,
+  }) */
+
+
+fetch(url)
+  .then(response => response.json())  // convert to json
+  .then(json => successFunc(json))    //print data to console
+  .catch(err => console.log('Request Failed', err)); // Catch errors
+
+
 });
