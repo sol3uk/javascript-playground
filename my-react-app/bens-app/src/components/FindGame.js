@@ -104,7 +104,7 @@ const FindGame = () => {
   //   if your code is going to generate some html, it just has to return () it and it will be added to the page
   // })()}
   return (
-    <div style={{ margin: '20px' }}>
+    <div>
       <h1>FIND GAME !</h1>
       <h3>Instructions</h3>
       <p>One of these blocks has the prize in it</p>
