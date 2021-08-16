@@ -1,14 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-100">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="./prism.css" rel="stylesheet" />
+    <title>Open Weather API Test</title>
 </head>
 
-<body>
-    <div id="result"></div>
+<body class="d-flex flex-column h-100">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./index.html">JS Playground</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Sandboxes
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="./localStorage.html">Local Storage</a></li>
+                            <li><a class="dropdown-item active" href="./openWeatherAPI.html">APIs</a></li>
+                            <li><a class="dropdown-item" href="./stylesTest.html">Styling</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h3>APIs </h3>
+        <h5>Example Output:</h5>
+        <!-- <div id="result" class="prettyprint text-break"></div> -->
+        <pre class="rounded-3"><code id="result" class="language-javascript" ></code></pre>
+        <p>
+            When you load the page a request is made to the <a href="https://openweathermap.org/api">Open Weather API</a>, specifically the <a href="https://openweathermap.org/current">Current Weather Data</a> endpoint.
+        </p>
+        <h3>Code Used: </h3>
+        <pre class="rounded-3"><code id="codeDisplay" class="language-javascript" ></code></pre>
+    </div>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <span class="text-muted">By <a href="https://sol3.me">@sol3uk</a>.</span>
+        </div>
+    </footer>
+
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-    <script src="openWeatherAPI.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+        
+<script id="codeForPage">
+    $(document).ready(function () {
+        var domain = "https://api.openweathermap.org/data/2.5/"
+        var endpoint = "weather"
+        //This is just a test key, if you steal it you're mean
+        var educationalKey = "4561dbb858c01c0096262a7277c1ba4a"
+        var citySearch = "london"
+        //Example, build url with template literals
+        //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+        var url = `${domain + endpoint}?q=${citySearch}&appid=${educationalKey}`
+
+
+        let successFunc = (response) => {
+            var data = response;
+            var lat = data.coord.lat;
+            var long = data.coord.lon;
+            var icon = data.weather[0].icon;
+            $("#result").html(`Lat: ${lat} Long: ${long}`)
+            $("#result").append(`</br>OpenWeather Data: ${JSON.stringify(response, null, 2)}`);
+            $("#result").append(`</br>Weather Icon: <img src=\"http://openweathermap.org/img/wn/${icon}@2x.png\">`)
+        }
+
+
+        fetch(url)
+            .then(response => response.json())  // convert to json
+            .then(json => successFunc(json))    //print data to console
+            .catch(err => console.log('Request Failed', err)); // Catch errors
+            
+    });
+
+</script>
+    <script>
+        $('#codeDisplay').html($('#codeForPage').html())
+    </script>
 </body>
 
 </html>
